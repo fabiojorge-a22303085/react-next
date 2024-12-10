@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import Card from '@/components/Card/Card'; // Certifique-se de que o caminho do Card está correto
-import { Tecnologia } from '@/models/interfaces'; // Importe a interface Tecnologia
+import Card from '@/components/Card/Card'; // Certifique-se de que o caminho para Card está correto
+
+interface Tecnologia {
+  id: number;
+  title: string;
+  image: string;
+  description: string;
+  rating: number;
+}
 
 const TecnologiasPage = () => {
   const [tecnologias, setTecnologias] = useState<Tecnologia[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Carregar dados do arquivo JSON
     const fetchTecnologias = async () => {
       try {
-        const response = await fetch('/data/tecnologias.json');
+        const response = await fetch('/data/tecnologias.json'); // O caminho pode variar dependendo da sua estrutura
         const data = await response.json();
         setTecnologias(data);
       } catch (err) {
@@ -25,20 +31,17 @@ const TecnologiasPage = () => {
   if (!tecnologias.length) return <div>Carregando tecnologias...</div>;
 
   return (
-    <main>
-      <h1>Tecnologias Disponíveis</h1>
-      <div className="product-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <main className="p-6">
+      <h1 className="text-3xl font-semibold text-center mb-6">Tecnologias que Aprendi</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {tecnologias.map((tecnologia) => (
-          <div key={tecnologia.id} className="card p-4 border rounded-lg shadow-md">
-            <img
-              src={tecnologia.image}
-              alt={tecnologia.title}
-              className="w-full h-32 object-contain mb-4"
-            />
-            <h3 className="text-xl font-semibold">{tecnologia.title}</h3>
-            <p className="text-gray-600">{tecnologia.description}</p>
-            <p className="text-yellow-500">Rating: {tecnologia.rating} / 5</p>
-          </div>
+          <Card
+            key={tecnologia.id}
+            title={tecnologia.title}
+            image={tecnologia.image}
+            description={tecnologia.description}
+            rating={tecnologia.rating}
+          />
         ))}
       </div>
     </main>
@@ -46,4 +49,3 @@ const TecnologiasPage = () => {
 };
 
 export default TecnologiasPage;
-
