@@ -18,3 +18,10 @@ export interface Product {
     rating: number;
   }
   
+  export interface Tecnologia {
+    id: number;
+    title: string;
+    image: string;
+    description: string;
+    rating: number;
+  }

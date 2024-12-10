@@ -2,11 +2,11 @@
 import React from 'react';
 import { Product } from '@/models/interfaces';
 
-interface ProductCardProps {
+interface Card {
   product: Product;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<Card> = ({ product }) => {
   return (
     <div className="border border-gray-300 rounded-lg p-4 bg-gray-50 shadow-md hover:translate-y-[-5px] transition-transform">
       <img

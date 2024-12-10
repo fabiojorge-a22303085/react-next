@@ -5,3 +5,8 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+module.exports = {
+  images: {
+    domains: ['deisishop.pythonanywhere.com'], // Permite carregar imagens desse domínio
+  },
+};
