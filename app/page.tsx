@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Page() {
   return (
-    <main className="min-h-screen bg-gray-100 flex items-center justify-center">
+    
       <section className="overflow-auto">
         <h1 className="text-4xl font-bold mb-6 text-center">
           Bem vindo!
@@ -11,6 +11,7 @@ export default function Page() {
         <p className="text-gray-700 text-lg mb-8 text-center">
           Esta é a minha App em React e Next.js, uma das tecnologias web mais usadas nos dias de hoje.
         </p>
+        
         <nav className="flex flex-wrap justify-center gap-6">
           <Link href="/produtos" legacyBehavior>
             <a className="bg-purple-500 text-white px-6 py-3 rounded-md text-lg font-semibold hover:bg-purple-600 transition">
@@ -29,6 +30,6 @@ export default function Page() {
           </Link>
         </nav>
       </section>
-    </main>
+    
   );
 }
