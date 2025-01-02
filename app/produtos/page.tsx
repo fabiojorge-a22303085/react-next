@@ -15,6 +15,7 @@ export default function Page() {
 
   return (
     <section className=" bg-gray-100">
+       <h1 className="text-4xl font-bold text-center mb-8">Produtos</h1>
       {data.map((product) => (
         <ProductCard key={product.id} product={product} />
       ))}

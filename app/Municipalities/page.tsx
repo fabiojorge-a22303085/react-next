@@ -14,6 +14,7 @@ export default function page() {
     if (!data) return <div>No data!</div>
 
     return <section className="overflow-auto h-full">
+        <h1 className="text-4xl font-bold text-center mb-8">Municipios</h1>
         { data.map( m => 
         <MunicipalityCard
         id={m.id}
