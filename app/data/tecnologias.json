@@ -3,7 +3,7 @@
       "id": 1,
       "title": "HTML",
       "image": "/images/html-logo.png",
-      "description": "HTML é a linguagem de marcação padrão usada para criar páginas web.",
+      "description": "HTML é a linguagem padrão usada para criar páginas web.",
       "rating": 4.9
     },
     {
@@ -45,7 +45,7 @@
       "id": 7,
       "title": "GitHub",
       "image": "/images/github-logo.png",
-      "description": "GitHub é uma plataforma para hospedagem de código-fonte e controle de versão usando Git.",
+      "description": "GitHub é uma plataforma para hospedar código-fonte e controlo de versão usando Git.",
       "rating": 4.9
     },
     {
@@ -59,7 +59,7 @@
       "id": 9,
       "title": "GitHub Pages",
       "image": "/images/github-pages-logo.png",
-      "description": "GitHub Pages permite hospedar sites estáticos diretamente do repositório do GitHub.",
+      "description": "GitHub Pages permite armazenar sites estáticos diretamente do repositório do GitHub.",
       "rating": 4.8
     },
     {

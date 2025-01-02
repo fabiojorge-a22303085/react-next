@@ -6,10 +6,9 @@ import { Product } from '@/models/interfaces';
 import Card from '@/components/Card/Card';
 
 export default function DeisiShopPage() {
-  const [products, setProducts] = useState<Product[]>([]); // Lista de produtos
+  const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<Product[]>([]); // Produtos no carrinho
-  const [search, setSearch] = useState(""); // Valor da pesquisa
-
+  const [search, setSearch] = useState(""); 
   // Fetch produtos da API
   useEffect(() => {
     const fetchProducts = async () => {
@@ -25,7 +24,6 @@ export default function DeisiShopPage() {
     fetchProducts();
   }, []);
 
-  // Carregar carrinho do localStorage ao montar
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
@@ -33,7 +31,6 @@ export default function DeisiShopPage() {
     }
   }, []);
 
-  // Salvar carrinho no localStorage sempre que ele for atualizado
   useEffect(() => {
     if (cart.length > 0) {
       localStorage.setItem("cart", JSON.stringify(cart));
@@ -42,53 +39,47 @@ export default function DeisiShopPage() {
     }
   }, [cart]);
 
-  // Adicionar ao carrinho
   const addToCart = (product: Product) => {
     setCart((prevCart) => [...prevCart, product]);
   };
 
-  // Remover um produto específico do carrinho
   const removeFromCart = (productId: number) => {
     setCart((prevCart) => prevCart.filter((product) => product.id !== productId));
   };
 
-  // Limpar o carrinho
   const clearCart = () => {
     setCart([]);
   };
 
-  // Comprar produtos
   const buy = () => {
     fetch("/api/deisishop/buy", {
       method: "POST",
       body: JSON.stringify({
-        products: cart.map((product) => product.id), // Mapear IDs dos produtos no carrinho
-        name: "", // Atualize o nome conforme necessário
-        student: false, // Atualize o status de estudante conforme o contexto
-        coupon: "", // Adicione um cupom, se necessário
+        products: cart.map((product) => product.id), 
+        name: "", 
+        student: false, 
+        coupon: "",
       }),
       headers: {
-        "Content-Type": "application/json", // Define o tipo de conteúdo como JSON
+        "Content-Type": "application/json", 
       },
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(response.statusText); // Lança erro se a resposta não for OK
+          throw new Error(response.statusText);
         }
-        return response.json(); // Converte a resposta para JSON
+        return response.json(); 
       })
       .then((data) => {
         console.log("Compra realizada com sucesso:", data);
-        setCart([]); // Limpa o carrinho após a compra
+        setCart([]); 
       })
       .catch((error) => {
-        console.error("Erro ao comprar:", error.message); // Exibe erro no console
-        alert("Erro ao processar a compra. Por favor, tente novamente."); // Alerta ao usuário
+        console.error("Erro ao comprar:", error.message);
+        alert("Erro ao processar a compra. Por favor, tente novamente.");
       });
   };
   
-
-
 
   return (
     <main className="h-full w-full bg-gray-50 flex flex-col">
@@ -122,7 +113,7 @@ export default function DeisiShopPage() {
               description={product.description}
               price={product.price}
               image={product.image}
-              rating={product.rating} // Passa o rating como prop
+              rating={product.rating} 
               onAddToCart={() => addToCart(product)}
             />
           ))}

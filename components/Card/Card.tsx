@@ -11,7 +11,7 @@ interface ProductProps {
     rate: number;
     count: number;
   };
-  onAddToCart: () => void; // Callback para adicionar ao carrinho
+  onAddToCart: () => void;
 }
 
 const Card: React.FC<ProductProps> = ({ title, description, price, image, rating, onAddToCart }) => {
