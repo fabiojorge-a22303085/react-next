@@ -166,7 +166,7 @@ export default function DeisiShopPage() {
             </div>
           </>
         ) : (
-          <p className="text-gray-500">Seu carrinho está vazio.</p>
+          <p className="text-gray-500">O carrinho está vazio.</p>
         )}
       </section>
     </main>
