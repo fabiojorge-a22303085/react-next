@@ -2,8 +2,8 @@
 
 export interface Municipality {
     id: string;
-    district_name: string;
     name: string;
+    district_name: string;
 }
 
 // app/models/interfaces.ts
@@ -11,17 +11,8 @@ export interface Municipality {
 export interface Product {
     id: number;
     title: string;
-    price: number;
-    description: string;
     category: string;
+    price: number;
     image: string;
-    rating: number;
   }
   
-  export interface Tecnologia {
-    id: number;
-    title: string;
-    image: string;
-    description: string;
-    rating: number;
-  }
