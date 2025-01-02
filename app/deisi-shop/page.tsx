@@ -1,27 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  description: string;
-  category: string;
-  image: string;
-  rating: {
-    rate: number;
-    count: number;
-  };
-}
+import React from 'react'
+import { useEffect, useState } from 'react';
+import { Product } from '@/models/interfaces';
+import Card from '@/components/Card/Card';
 
 export default function DeisiShopPage() {
-  const [products, setProducts] = useState<Product[]>([]); // Todos os produtos
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]); // Produtos filtrados
-  const [search, setSearch] = useState(""); // Valor da pesquisa
+  const [products, setProducts] = useState<Product[]>([]); // Lista de produtos
   const [cart, setCart] = useState<Product[]>([]); // Produtos no carrinho
+  const [search, setSearch] = useState(""); // Valor da pesquisa
 
   // Fetch produtos da API
   useEffect(() => {
@@ -30,7 +17,6 @@ export default function DeisiShopPage() {
         const response = await fetch("https://deisishop.pythonanywhere.com/products/");
         const data = await response.json();
         setProducts(data);
-        setFilteredProducts(data); // Inicialmente, todos os produtos são exibidos
       } catch (error) {
         console.error("Erro ao buscar produtos:", error);
       }
@@ -39,7 +25,7 @@ export default function DeisiShopPage() {
     fetchProducts();
   }, []);
 
-
+  // Carregar carrinho do localStorage ao montar
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
@@ -47,7 +33,7 @@ export default function DeisiShopPage() {
     }
   }, []);
 
-  // Atualizar o localStorage sempre que o carrinho for atualizado
+  // Salvar carrinho no localStorage sempre que ele for atualizado
   useEffect(() => {
     if (cart.length > 0) {
       localStorage.setItem("cart", JSON.stringify(cart));
@@ -56,26 +42,14 @@ export default function DeisiShopPage() {
     }
   }, [cart]);
 
-  // Filtrar produtos com base na pesquisa
-  useEffect(() => {
-    if (search.trim() === "") {
-      setFilteredProducts(products);
-    } else {
-      const filtered = products.filter((product) =>
-        product.title.toLowerCase().includes(search.toLowerCase())
-      );
-      setFilteredProducts(filtered);
-    }
-  }, [search, products]);
-
-  // Adicionar produto ao carrinho
+  // Adicionar ao carrinho
   const addToCart = (product: Product) => {
     setCart((prevCart) => [...prevCart, product]);
   };
 
-  // Remover produto do carrinho
+  // Remover um produto específico do carrinho
   const removeFromCart = (productId: number) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+    setCart((prevCart) => prevCart.filter((product) => product.id !== productId));
   };
 
   // Limpar o carrinho
@@ -88,45 +62,43 @@ export default function DeisiShopPage() {
     fetch("/api/deisishop/buy", {
       method: "POST",
       body: JSON.stringify({
-        products: cart.map((product) => product.id), 
-        name: "", 
-        student: false, 
-        coupon: "", 
+        products: cart.map((product) => product.id), // Mapear IDs dos produtos no carrinho
+        name: "", // Atualize o nome conforme necessário
+        student: false, // Atualize o status de estudante conforme o contexto
+        coupon: "", // Adicione um cupom, se necessário
       }),
       headers: {
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json", // Define o tipo de conteúdo como JSON
       },
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(response.statusText); 
+          throw new Error(response.statusText); // Lança erro se a resposta não for OK
         }
-        return response.json();
+        return response.json(); // Converte a resposta para JSON
       })
       .then((data) => {
         console.log("Compra realizada com sucesso:", data);
         setCart([]); // Limpa o carrinho após a compra
       })
       .catch((error) => {
-        console.error("Erro ao comprar:", error.message); 
-        alert("Erro ao processar a compra. Por favor, tente novamente."); 
+        console.error("Erro ao comprar:", error.message); // Exibe erro no console
+        alert("Erro ao processar a compra. Por favor, tente novamente."); // Alerta ao usuário
       });
   };
   
-  
+
 
 
   return (
-    <main className="h-full w-full bg-white flex flex-col">
+    <main className="h-full w-full bg-gray-50 flex flex-col">
       {/* Cabeçalho */}
       <header className="w-full bg-gray-100 shadow-md py-4">
-        <h1 className="text-4xl font-bold text-center border-b-4 border-black">
-          DEISI Shop
-        </h1>
+        <h1 className="text-4xl font-bold text-center">DEISI Shop</h1>
       </header>
 
       {/* Campo de Pesquisa */}
-      <section className="p-6 bg-gray-50">
+      <section className="p-6">
         <input
           type="text"
           placeholder="Pesquisar produtos..."
@@ -137,35 +109,23 @@ export default function DeisiShopPage() {
       </section>
 
       {/* Lista de Produtos */}
-      <section className="flex flex-wrap justify-center items-center gap-6 p-6 mx-auto">
-        {filteredProducts.map((product) => (
-          <div
-            key={product.id}
-            className="bg-white rounded-lg shadow-md p-4 flex flex-col items-center text-center w-72"
-          >
-            {/* Imagem */}
-            <Image
-              src={product.image}
-              alt={product.title}
-              width={200}
-              height={200}
-              className="mb-4 rounded-md object-cover"
+      <section className="flex flex-wrap justify-center gap-6 p-6">
+        {products
+          .filter((product) =>
+            product.title.toLowerCase().includes(search.toLowerCase())
+          )
+          .map((product) => (
+            <Card
+              key={product.id}
+              id={product.id}
+              title={product.title}
+              description={product.description}
+              price={product.price}
+              image={product.image}
+              rating={product.rating} // Passa o rating como prop
+              onAddToCart={() => addToCart(product)}
             />
-            {/* Título */}
-            <h2 className="text-xl font-semibold mb-2">{product.title}</h2>
-            {/* Descrição */}
-            <p className="text-gray-600 mb-4">{product.description}</p>
-            {/* Preço */}
-            <p className="text-gray-800 font-bold mb-2">€{product.price.toFixed(2)}</p>
-            {/* Botão Adicionar ao Carrinho */}
-            <button
-              onClick={() => addToCart(product)}
-              className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            >
-              Adicionar ao Carrinho
-            </button>
-          </div>
-        ))}
+          ))}
       </section>
 
       {/* Carrinho */}
@@ -173,22 +133,22 @@ export default function DeisiShopPage() {
         <h2 className="text-2xl font-bold mb-4">Carrinho</h2>
         {cart.length > 0 ? (
           <>
+            {/* Produtos no Carrinho */}
             {cart.map((product) => (
               <div
                 key={product.id}
                 className="bg-white rounded-lg shadow-md p-4 flex items-center gap-4 mb-4"
               >
-                <Image
+                <img
                   src={product.image}
                   alt={product.title}
-                  width={50}
-                  height={50}
-                  className="rounded-md object-cover"
+                  className="w-16 h-16 rounded-md object-cover"
                 />
                 <div className="flex-1">
                   <p className="text-lg font-semibold">{product.title}</p>
                   <p className="text-sm text-gray-500">€{product.price.toFixed(2)}</p>
                 </div>
+                {/* Botão de Remover */}
                 <button
                   onClick={() => removeFromCart(product.id)}
                   className="px-2 py-1 bg-red-500 text-white rounded-md hover:bg-red-600"
@@ -198,7 +158,7 @@ export default function DeisiShopPage() {
               </div>
             ))}
 
-            {/* Botões do Carrinho */}
+            {/* Botões Comprar e Limpar */}
             <div className="flex gap-4 mt-4">
               <button
                 onClick={buy}
@@ -218,9 +178,6 @@ export default function DeisiShopPage() {
           <p className="text-gray-500">Seu carrinho está vazio.</p>
         )}
       </section>
-
-      <footer className="w-full bg-gray-100 py-4 flex justify-center">
-      </footer>
     </main>
   );
 }
